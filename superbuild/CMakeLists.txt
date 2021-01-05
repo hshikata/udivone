@@ -2,8 +2,6 @@ project(udivone-superbuild)
 
 cmake_minimum_required(VERSION 3.18)
 
-find_package(git REQUIRED)
-
 include(ExternalProject)
 
 ########################################################################
@@ -31,6 +29,7 @@ ExternalProject_Add(Embree
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DEMBREE_TASKING_SYSTEM:STRING=TBB
     -DEMBREE_TBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
+    -DEMBREE_TUTORIALS:BOOL=OFF
   DEPENDS oneTBB
 )
 
@@ -66,7 +65,7 @@ if (WIN32)
   set(BOOST_BUILD_CMD ${CMAKE_CURRENT_BINARY_DIR}/boost-prefix/src/boost/b2.exe)
 elseif (UNIX)
   set(BOOST_BOOTSTRAP_CMD ${CMAKE_CURRENT_BINARY_DIR}/boost-prefix/src/boost/bootstrap.sh)
-  set(BOOST_BUILD_CMD ${CMAKE_CURRENT_BINARY_DIR}/boost-prefix/srd/boost/b2)
+  set(BOOST_BUILD_CMD ${CMAKE_CURRENT_BINARY_DIR}/boost-prefix/src/boost/b2)
 endif ()
 
 ExternalProject_Add(boost
@@ -79,7 +78,7 @@ ExternalProject_Add(boost
     -sZLIB_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
     --without-python
     address-model=64
-    variant=release,debug
+    variant=release
     link=shared
     runtime-link=shared
     threading=multi
@@ -98,6 +97,32 @@ ExternalProject_Add(dcmtk
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DZLIB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
     -DDCMTK_WITH_DOXYGEN:BOOL=OFF
+)
+
+########################################################################
+# ITK
+########################################################################
+ExternalProject_Add(itk
+  GIT_REPOSITORY https://github.com/InsightSoftwareConsortium/ITK.git
+  GIT_TAG v5.1.2
+  CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    -DBUILD_SHARED_LIBS:BOOL=ON
+    -DBUILD_TESTING:BOOL=OFF
+    -DBUILD_EXAMPLES:BOOL=OFF
+)
+
+########################################################################
+# VTK
+########################################################################
+ExternalProject_Add(vtk
+  GIT_REPOSITORY https://gitlab.kitware.com/vtk/vtk.git
+  GIT_TAG v9.0.1
+  CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    -DBUILD_SHARED_LIBS:BOOL=ON
+    -DBUILD_TESTING:BOOL=OFF
+    -DBUILD_EXAMPLES:BOOL=OFF
 )
 
 ########################################################################
