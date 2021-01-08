@@ -2,6 +2,8 @@ project(udivone-superbuild)
 
 cmake_minimum_required(VERSION 3.18)
 
+cmake_policy(SET CMP0097 NEW)
+
 include(ExternalProject)
 
 set(LIB_DEBUG_SUFFIX "")
@@ -39,15 +41,69 @@ ExternalProject_Add(embree
 )
 
 ########################################################################
+# Intel rkcommon
+########################################################################
+ExternalProject_Add(rkcommon
+  GIT_REPOSITORY https://github.com/ospray/rkcommon.git
+  GIT_TAG v1.5.1
+  UPDATE_COMMAND ""
+  CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    -DBUILD_SHARED_LIBS:BOOL=ON
+    -DBUILD_TESTING:BOOL=OFF
+    -DTBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
+    -DINSTALL_DEPS:BOOL=OFF
+  DEPENDS onetbb
+)
+
+########################################################################
+# Intel OpenVKL
+########################################################################
+ExternalProject_Add(openvkl
+  GIT_REPOSITORY https://github.com/openvkl/openvkl.git
+  GIT_TAG v0.11.0
+  UPDATE_COMMAND ""
+  CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    -DBUILD_TESTING:BOOL=OFF
+    -DBUILD_EXAMPLES:BOOL=OFF
+    -DBUILD_BENCHMARKS:BOOL=OFF
+  DEPENDS rkcommon
+)
+
+########################################################################
+# Intel OpenImageDenoise
+########################################################################
+ExternalProject_Add(oidn
+  GIT_REPOSITORY https://github.com/OpenImageDenoise/oidn.git
+  GIT_TAG v1.2.4
+  UPDATE_COMMAND ""
+  CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    -DTBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
+    -DOIDN_APPS:BOOL=OFF
+  DEPENDS onetbb
+)
+
+########################################################################
 # Intel ospray
 ########################################################################
 ExternalProject_Add(ospray
   GIT_REPOSITORY https://github.com/ospray/ospray.git
   GIT_TAG v2.4.0
+  GIT_SUBMODULES ""
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
-  DEPENDS onetbb embree
+    -DTBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
+    -Drkcommon_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/rkcommon-1.5.1
+    -Dopenvkl_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/openvkl-0.11.0
+    -Dembree_DIR:PATH=${CMAKE_INSTALL_PREFIX}
+    -DOSPRAY_APPS_BENCHMARK:BOOL=OFF
+    -DOSPRAY_APPS_EXAMPLES:BOOL=OFF
+    -DOSPRAY_APPS_TESTING:BOOL=OFF
+    -DOSPRAY_APPS_TUTORIALS:BOOL=OFF
+  DEPENDS onetbb embree rkcommon openvkl oidn
 )
 
 ########################################################################
@@ -58,7 +114,6 @@ ExternalProject_Add(zlib
   GIT_TAG v1.2.11
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
-    -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
 )
 
 ########################################################################
@@ -69,7 +124,6 @@ ExternalProject_Add(libpng
   GIT_TAG v1.6.37
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
-    -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
     -DZLIB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
   DEPENDS zlib
 )
