@@ -1,0 +1,22 @@
+diff --git a/CMake/3rdparty.cmake b/CMake/3rdparty.cmake
+index 4a388aaf2..e770ab741 100644
+--- a/CMake/3rdparty.cmake
++++ b/CMake/3rdparty.cmake
+@@ -59,7 +59,7 @@ if(WIN32 AND NOT MINGW)
+     if(WITH_LIBPNGINC)
+       set(LIBPNG_INCDIR "${WITH_LIBPNGINC}/include")
+       set(LIBPNG_LIBDIR "${WITH_LIBPNGINC}/lib")
+-      set(LIBPNG_LIBS debug "${LIBPNG_LIBDIR}/libpng_d.lib" optimized "${LIBPNG_LIBDIR}/libpng_o.lib")
++      set(LIBPNG_LIBS debug "${LIBPNG_LIBDIR}/libpng16d.lib" optimized "${LIBPNG_LIBDIR}/libpng16.lib")
+       message(STATUS "Info: DCMTK PNG support will be enabled")
+       set(WITH_LIBPNG 1)
+     else() # turn off library if library path not set
+@@ -117,7 +117,7 @@ if(WIN32 AND NOT MINGW)
+     if(WITH_ZLIBINC)
+       set(ZLIB_INCDIR "${WITH_ZLIBINC}/include")
+       set(ZLIB_LIBDIR "${WITH_ZLIBINC}/lib")
+-      set(ZLIB_LIBS debug "${ZLIB_LIBDIR}/zlib_d.lib" optimized "${ZLIB_LIBDIR}/zlib_o.lib")
++      set(ZLIB_LIBS debug "${ZLIB_LIBDIR}/zlibd.lib" optimized "${ZLIB_LIBDIR}/zlib.lib")
+       message(STATUS "Info: DCMTK ZLIB support will be enabled")
+       set(WITH_ZLIB 1)
+     else() # turn off library if library path not set

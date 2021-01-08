@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.18)
 include(ExternalProject)
 
 set(LIB_DEBUG_SUFFIX "")
-if (WIN32)
+if (MSVC)
   set(LIB_DEBUG_SUFFIX "d")
 endif ()
 
@@ -107,9 +107,15 @@ ExternalProject_Add(boost
 ########################################################################
 # DCMTK
 ########################################################################
+set(DCMTK_PATCH_COMMAND "")
+if (MSVC)
+  set(DCMTK_PATCH_COMMAND "git apply ${CMAKE_CURRENT_SOURCE_DIR}/dcmtk.patch")
+endif ()
+
 ExternalProject_Add(dcmtk
   GIT_REPOSITORY https://github.com/DCMTK/dcmtk.git
   GIT_TAG DCMTK-3.6.5
+  PATCH_COMMAND ${DCMTK_PATCH_COMMAND}
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
