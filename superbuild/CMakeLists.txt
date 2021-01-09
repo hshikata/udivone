@@ -1,6 +1,6 @@
 project(udivone-superbuild)
 
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.19)
 
 cmake_policy(SET CMP0097 NEW)
 
@@ -43,12 +43,15 @@ ExternalProject_Add(embree
 ########################################################################
 # Intel rkcommon
 ########################################################################
+set(RKCOMMON_VERSION 1.5.1)
+
 ExternalProject_Add(rkcommon
   GIT_REPOSITORY https://github.com/ospray/rkcommon.git
-  GIT_TAG v1.5.1
+  GIT_TAG v${RKCOMMON_VERSION}
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
     -DBUILD_SHARED_LIBS:BOOL=ON
     -DBUILD_TESTING:BOOL=OFF
     -DTBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
@@ -59,9 +62,11 @@ ExternalProject_Add(rkcommon
 ########################################################################
 # Intel OpenVKL
 ########################################################################
+set(OPENVKL_VERSION 0.11.0)
+
 ExternalProject_Add(openvkl
   GIT_REPOSITORY https://github.com/openvkl/openvkl.git
-  GIT_TAG v0.11.0
+  GIT_TAG v${OPENVKL_VERSION}
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -74,10 +79,16 @@ ExternalProject_Add(openvkl
 ########################################################################
 # Intel OpenImageDenoise
 ########################################################################
+set(OIDN_PATCH_COMMAND "")
+if (MSVC)
+  set(OIDN_PATCH_COMMAND "${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_SOURCE_DIR}/oidn.patch")
+endif ()
+
 ExternalProject_Add(oidn
   GIT_REPOSITORY https://github.com/OpenImageDenoise/oidn.git
   GIT_TAG v1.2.4
   UPDATE_COMMAND ""
+  PATCH_COMMAND ${OIDN_PATCH_COMMAND}
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DTBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
@@ -96,13 +107,15 @@ ExternalProject_Add(ospray
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DTBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
-    -Drkcommon_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/rkcommon-1.5.1
-    -Dopenvkl_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/openvkl-0.11.0
+    -Drkcommon_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/rkcommon-${RKCOMMON_VERSION}
+    -Dopenvkl_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/openvkl-${OPENVKL_VERSION}
     -Dembree_DIR:PATH=${CMAKE_INSTALL_PREFIX}
     -DOSPRAY_APPS_BENCHMARK:BOOL=OFF
     -DOSPRAY_APPS_EXAMPLES:BOOL=OFF
     -DOSPRAY_APPS_TESTING:BOOL=OFF
     -DOSPRAY_APPS_TUTORIALS:BOOL=OFF
+    -DOSPRAY_MODULE_DENOISER:BOOL=ON
+    -DOpenImageDenoise_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/OpenImageDenoise
   DEPENDS onetbb embree rkcommon openvkl oidn
 )
 
@@ -149,7 +162,7 @@ ExternalProject_Add(boost
     -sZLIB_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
     --without-python
     address-model=64
-    variant=release
+    variant=debug,release
     link=shared
     runtime-link=shared
     threading=multi
@@ -163,7 +176,7 @@ ExternalProject_Add(boost
 ########################################################################
 set(DCMTK_PATCH_COMMAND "")
 if (MSVC)
-  set(DCMTK_PATCH_COMMAND "git apply ${CMAKE_CURRENT_SOURCE_DIR}/dcmtk.patch")
+  set(DCMTK_PATCH_COMMAND "${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_SOURCE_DIR}/dcmtk.patch")
 endif ()
 
 ExternalProject_Add(dcmtk
@@ -186,9 +199,13 @@ ExternalProject_Add(dcmtk
 ########################################################################
 # VTK
 ########################################################################
+set(VTK_MAJOR_VERSION 9)
+set(VTK_MINOR_VERSION 0)
+set(VTK_PATCH_LEVEL 1)
+
 ExternalProject_Add(vtk
   GIT_REPOSITORY https://gitlab.kitware.com/vtk/vtk.git
-  GIT_TAG v9.0.1
+  GIT_TAG v${VTK_MAJOR_VERSION}.${VTK_MINOR_VERSION}.${VTK_PATCH_LEVEL}
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
@@ -219,8 +236,8 @@ ExternalProject_Add(itk
     -DModule_ITKTBB:BOOL=ON
     -DTBB_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/TBB
     -DModule_ITKVtkGlue:BOOL=ON
-    -DVTK_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/vtk-9.0
-  DEPENDS vtk
+    -DVTK_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/vtk-${VTK_MAJOR_VERSION}.${VTK_MINOR_VERSION}
+  DEPENDS onetbb vtk
 )
 
 ########################################################################
