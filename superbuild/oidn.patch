@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4e10cb0..1eebd0f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -74,7 +74,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+ 
+ # Library dependencies
+ find_package(Threads REQUIRED)
+-find_package(TBB 2017.0 REQUIRED tbb tbbmalloc)
++find_package(TBB REQUIRED tbb tbbmalloc)
+ 
+ # Packaging
+ include(oidn_package)

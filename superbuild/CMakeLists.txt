@@ -81,7 +81,7 @@ ExternalProject_Add(openvkl
 ########################################################################
 set(OIDN_PATCH_COMMAND "")
 if (MSVC)
-  set(OIDN_PATCH_COMMAND "${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_SOURCE_DIR}/oidn.patch")
+  set(OIDN_PATCH_COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_SOURCE_DIR}/oidn.patch)
 endif ()
 
 ExternalProject_Add(oidn
@@ -176,7 +176,7 @@ ExternalProject_Add(boost
 ########################################################################
 set(DCMTK_PATCH_COMMAND "")
 if (MSVC)
-  set(DCMTK_PATCH_COMMAND "${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_SOURCE_DIR}/dcmtk.patch")
+  set(DCMTK_PATCH_COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_SOURCE_DIR}/dcmtk.patch)
 endif ()
 
 ExternalProject_Add(dcmtk
