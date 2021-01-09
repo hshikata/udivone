@@ -142,6 +142,22 @@ ExternalProject_Add(libpng
 )
 
 ########################################################################
+# openjpeg
+########################################################################
+ExternalProject_Add(openjpeg
+  GIT_REPOSITORY https://github.com/uclouvain/openjpeg.git
+  GIT_TAG v2.4.0
+  CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
+    -DBUILD_TESTING:BOOL=OFF
+    -DBUILD_SHARED_LIBS:BOOL=ON
+    -DBUILD_STATIC_LIBS:BOOL=OFF
+    -DZLIB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
+  DEPENDS zlib
+)
+
+########################################################################
 # Boost
 ########################################################################
 if (WIN32)
@@ -193,7 +209,9 @@ ExternalProject_Add(dcmtk
     -DWITH_ZLIBINC:PATH=${CMAKE_INSTALL_PREFIX}
     -DDCMTK_WITH_PNG:BOOL=ON
     -DWITH_LIBPNGINC:PATH=${CMAKE_INSTALL_PREFIX}
-  DEPENDS zlib libpng
+    -DDCMTK_WITH_OPENJPEG:BOOL=ON
+    -DWITH_OPENJPEGINC:PATH=${CMAKE_INSTALL_PREFIX}
+  DEPENDS zlib libpng openjpeg
 )
 
 ########################################################################
@@ -209,10 +227,14 @@ ExternalProject_Add(vtk
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
+    -DCMAKE_FIND_ROOT_PATH:PATH=${CMAKE_INSTALL_PREFIX}/lib
     -DBUILD_SHARED_LIBS:BOOL=ON
     -DVTK_BUILD_DOCUMENTATION:BOOL=OFF
     -DVTK_BUILD_TESTING:BOOL=OFF
     -DVTK_BUILD_EXAMPLES:BOOL=OFF
+    -DVTK_MODULE_USE_EXTERNAL_VTK_zlib:BOOL=ON
+    -DZLIB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
+  DEPENDS zlib
 )
 
 ########################################################################
@@ -237,7 +259,7 @@ ExternalProject_Add(itk
     -DTBB_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/TBB
     -DModule_ITKVtkGlue:BOOL=ON
     -DVTK_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/vtk-${VTK_MAJOR_VERSION}.${VTK_MINOR_VERSION}
-  DEPENDS onetbb vtk
+  DEPENDS onetbb vtk zlib libpng
 )
 
 ########################################################################
