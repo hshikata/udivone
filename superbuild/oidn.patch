@@ -6,8 +6,8 @@ index 4e10cb0..1eebd0f 100644
  
  # Library dependencies
  find_package(Threads REQUIRED)
--find_package(TBB 2017.0 REQUIRED tbb tbbmalloc)
-+find_package(TBB REQUIRED tbb tbbmalloc)
+-find_package(TBB 2017.0 REQUIRED tbb)
++find_package(TBB REQUIRED tbb)
  
  # Packaging
  include(oidn_package)

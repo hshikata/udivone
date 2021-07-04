@@ -16,7 +16,7 @@ endif ()
 ########################################################################
 ExternalProject_Add(onetbb
   GIT_REPOSITORY https://github.com/oneapi-src/oneTBB.git
-  GIT_TAG v2021.1.1
+  GIT_TAG v2021.3.0
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -29,7 +29,7 @@ ExternalProject_Add(onetbb
 ########################################################################
 ExternalProject_Add(embree
   GIT_REPOSITORY https://github.com/embree/embree.git
-  GIT_TAG v3.12.1
+  GIT_TAG v3.13.0
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -43,7 +43,7 @@ ExternalProject_Add(embree
 ########################################################################
 # Intel rkcommon
 ########################################################################
-set(RKCOMMON_VERSION 1.5.1)
+set(RKCOMMON_VERSION 1.6.1)
 
 ExternalProject_Add(rkcommon
   GIT_REPOSITORY https://github.com/ospray/rkcommon.git
@@ -62,7 +62,7 @@ ExternalProject_Add(rkcommon
 ########################################################################
 # Intel OpenVKL
 ########################################################################
-set(OPENVKL_VERSION 0.11.0)
+set(OPENVKL_VERSION 0.13.0)
 
 ExternalProject_Add(openvkl
   GIT_REPOSITORY https://github.com/openvkl/openvkl.git
@@ -70,6 +70,7 @@ ExternalProject_Add(openvkl
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
     -DBUILD_TESTING:BOOL=OFF
     -DBUILD_EXAMPLES:BOOL=OFF
     -DBUILD_BENCHMARKS:BOOL=OFF
@@ -86,11 +87,12 @@ endif ()
 
 ExternalProject_Add(oidn
   GIT_REPOSITORY https://github.com/OpenImageDenoise/oidn.git
-  GIT_TAG v1.2.4
+  GIT_TAG v1.4.1
   UPDATE_COMMAND ""
   PATCH_COMMAND ${OIDN_PATCH_COMMAND}
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
     -DTBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
     -DOIDN_APPS:BOOL=OFF
   DEPENDS onetbb
@@ -101,11 +103,12 @@ ExternalProject_Add(oidn
 ########################################################################
 ExternalProject_Add(ospray
   GIT_REPOSITORY https://github.com/ospray/ospray.git
-  GIT_TAG v2.4.0
+  GIT_TAG v2.6.0
   GIT_SUBMODULES ""
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
     -DTBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
     -Drkcommon_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/rkcommon-${RKCOMMON_VERSION}
     -Dopenvkl_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/openvkl-${OPENVKL_VERSION}
@@ -170,7 +173,7 @@ endif ()
 
 ExternalProject_Add(boost
   GIT_REPOSITORY https://github.com/boostorg/boost.git
-  GIT_TAG boost-1.75.0
+  GIT_TAG boost-1.76.0
   CONFIGURE_COMMAND ${BOOST_BOOTSTRAP_CMD}
   BUILD_COMMAND
     ${BOOST_BUILD_CMD}
@@ -197,7 +200,7 @@ endif ()
 
 ExternalProject_Add(dcmtk
   GIT_REPOSITORY https://github.com/DCMTK/dcmtk.git
-  GIT_TAG DCMTK-3.6.5
+  GIT_TAG DCMTK-3.6.6
   PATCH_COMMAND ${DCMTK_PATCH_COMMAND}
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -219,7 +222,7 @@ ExternalProject_Add(dcmtk
 ########################################################################
 set(VTK_MAJOR_VERSION 9)
 set(VTK_MINOR_VERSION 0)
-set(VTK_PATCH_LEVEL 1)
+set(VTK_PATCH_LEVEL 3)
 
 ExternalProject_Add(vtk
   GIT_REPOSITORY https://gitlab.kitware.com/vtk/vtk.git
@@ -242,7 +245,7 @@ ExternalProject_Add(vtk
 ########################################################################
 ExternalProject_Add(itk
   GIT_REPOSITORY https://github.com/InsightSoftwareConsortium/ITK.git
-  GIT_TAG v5.1.2
+  GIT_TAG v5.2.0
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
@@ -267,8 +270,18 @@ ExternalProject_Add(itk
 ########################################################################
 ExternalProject_Add(gtest
   GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG release-1.10.0
+  GIT_TAG release-1.11.0
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
+)
+
+########################################################################
+# Eigen
+########################################################################
+ExternalProject_Add(eigen
+  GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+  GIT_TAG 3.3.9
+  CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
 )
