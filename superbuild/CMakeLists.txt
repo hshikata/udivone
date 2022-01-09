@@ -16,7 +16,7 @@ endif ()
 ########################################################################
 ExternalProject_Add(onetbb
   GIT_REPOSITORY https://github.com/oneapi-src/oneTBB.git
-  GIT_TAG v2021.3.0
+  GIT_TAG v2021.5.0
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -29,7 +29,7 @@ ExternalProject_Add(onetbb
 ########################################################################
 ExternalProject_Add(embree
   GIT_REPOSITORY https://github.com/embree/embree.git
-  GIT_TAG v3.13.0
+  GIT_TAG v3.13.2
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -43,7 +43,7 @@ ExternalProject_Add(embree
 ########################################################################
 # Intel rkcommon
 ########################################################################
-set(RKCOMMON_VERSION 1.6.1)
+set(RKCOMMON_VERSION 1.8.0)
 
 ExternalProject_Add(rkcommon
   GIT_REPOSITORY https://github.com/ospray/rkcommon.git
@@ -62,7 +62,7 @@ ExternalProject_Add(rkcommon
 ########################################################################
 # Intel OpenVKL
 ########################################################################
-set(OPENVKL_VERSION 0.13.0)
+set(OPENVKL_VERSION 1.1.0)
 
 ExternalProject_Add(openvkl
   GIT_REPOSITORY https://github.com/openvkl/openvkl.git
@@ -87,7 +87,7 @@ endif ()
 
 ExternalProject_Add(oidn
   GIT_REPOSITORY https://github.com/OpenImageDenoise/oidn.git
-  GIT_TAG v1.4.1
+  GIT_TAG v1.4.2
   UPDATE_COMMAND ""
   PATCH_COMMAND ${OIDN_PATCH_COMMAND}
   CMAKE_ARGS
@@ -103,7 +103,7 @@ ExternalProject_Add(oidn
 ########################################################################
 ExternalProject_Add(ospray
   GIT_REPOSITORY https://github.com/ospray/ospray.git
-  GIT_TAG v2.6.0
+  GIT_TAG v2.8.0
   GIT_SUBMODULES ""
   UPDATE_COMMAND ""
   CMAKE_ARGS
@@ -173,7 +173,7 @@ endif ()
 
 ExternalProject_Add(boost
   GIT_REPOSITORY https://github.com/boostorg/boost.git
-  GIT_TAG boost-1.76.0
+  GIT_TAG boost-1.78.0
   CONFIGURE_COMMAND ${BOOST_BOOTSTRAP_CMD}
   BUILD_COMMAND
     ${BOOST_BUILD_CMD}
@@ -221,8 +221,8 @@ ExternalProject_Add(dcmtk
 # VTK
 ########################################################################
 set(VTK_MAJOR_VERSION 9)
-set(VTK_MINOR_VERSION 0)
-set(VTK_PATCH_LEVEL 3)
+set(VTK_MINOR_VERSION 1)
+set(VTK_PATCH_LEVEL 0)
 
 ExternalProject_Add(vtk
   GIT_REPOSITORY https://gitlab.kitware.com/vtk/vtk.git
@@ -245,7 +245,7 @@ ExternalProject_Add(vtk
 ########################################################################
 ExternalProject_Add(itk
   GIT_REPOSITORY https://github.com/InsightSoftwareConsortium/ITK.git
-  GIT_TAG v5.2.0
+  GIT_TAG v5.2.1
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
@@ -281,7 +281,7 @@ ExternalProject_Add(gtest
 ########################################################################
 ExternalProject_Add(eigen
   GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-  GIT_TAG 3.3.9
+  GIT_TAG 3.4.0
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
 )
