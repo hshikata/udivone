@@ -38,9 +38,11 @@ ExternalProject_Add(levelzero
 ########################################################################
 # Intel Embree
 ########################################################################
+set(EMBREE_VERSION 4.1.0)
+
 ExternalProject_Add(embree
   GIT_REPOSITORY https://github.com/embree/embree.git
-  GIT_TAG v4.1.0
+  GIT_TAG v${EMBREE_VERSION}
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -55,9 +57,11 @@ ExternalProject_Add(embree
 ########################################################################
 # Intel rkcommon
 ########################################################################
+set(RKCOMMON_VERSION 1.11.0)
+
 ExternalProject_Add(rkcommon
   GIT_REPOSITORY https://github.com/ospray/rkcommon.git
-  GIT_TAG v1.11.0
+  GIT_TAG v${RKCOMMON_VERSION}
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -72,9 +76,11 @@ ExternalProject_Add(rkcommon
 ########################################################################
 # Intel OpenVKL
 ########################################################################
+set(OPENVKL_VERSION 1.3.2)
+
 ExternalProject_Add(openvkl
   GIT_REPOSITORY https://github.com/openvkl/openvkl.git
-  GIT_TAG v1.3.2
+  GIT_TAG v${OPENVKL_VERSION}
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -82,22 +88,24 @@ ExternalProject_Add(openvkl
     -DBUILD_TESTING:BOOL=OFF
     -DBUILD_EXAMPLES:BOOL=OFF
     -DBUILD_BENCHMARKS:BOOL=OFF
-    -Drkcommon_DIR=${CMAKE_INSTALL_PREFIX}
+    -Drkcommon_DIR=${CMAKE_INSTALL_PREFIX}/lib/cmake/rkcommon-${RKCOMMON_VERSION}
   DEPENDS rkcommon
 )
 
 ########################################################################
 # Intel OpenImageDenoise
 ########################################################################
+set(OIDN_VERSION 2.0.1)
+
 ExternalProject_Add(oidn
   GIT_REPOSITORY https://github.com/OpenImageDenoise/oidn.git
-  GIT_TAG v2.0.1
+  GIT_TAG v${OIDN_VERSION}
   UPDATE_COMMAND ""
   PATCH_COMMAND ${OIDN_PATCH_COMMAND}
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
-    -DTBB_DIR:PATH=${CMAKE_INSTALL_PREFIX}
+    -DTBB_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/TBB
   DEPENDS onetbb
 )
 
@@ -112,16 +120,18 @@ ExternalProject_Add(ospray
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
-    -DTBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
+    -DTBB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/TBB
     -Drkcommon_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/rkcommon-${RKCOMMON_VERSION}
     -Dopenvkl_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/openvkl-${OPENVKL_VERSION}
-    -Dembree_DIR:PATH=${CMAKE_INSTALL_PREFIX}
-    -DOSPRAY_APPS_BENCHMARK:BOOL=OFF
-    -DOSPRAY_APPS_EXAMPLES:BOOL=OFF
-    -DOSPRAY_APPS_TESTING:BOOL=OFF
-    -DOSPRAY_APPS_TUTORIALS:BOOL=OFF
+    -Dembree_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/embree-${EMBREE_VERSION}
+    -DLEVEL_ZERO_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
+    -DOSPRAY_ENABLE_APPS_BENCHMARK:BOOL=OFF
+    -DOSPRAY_ENABLE_APPS_EXAMPLES:BOOL=OFF
+    -DOSPRAY_ENABLE_APPS_TESTING:BOOL=OFF
+    -DOSPRAY_ENABLE_APPS_TUTORIALS:BOOL=OFF
+    -DOSPRAY_ENABLE_VOLUMES:BOOL=ON
     -DOSPRAY_MODULE_DENOISER:BOOL=ON
-    -DOpenImageDenoise_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/OpenImageDenoise
+    -DOpenImageDenoise_DIR:PATH=${CMAKE_INSTALL_PREFIX}/lib/cmake/OpenImageDenoise-${OIDN_VERSION}
   DEPENDS onetbb levelzero embree rkcommon openvkl oidn
 )
 
@@ -186,7 +196,7 @@ ExternalProject_Add(boost
     -sZLIB_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
     --without-python
     address-model=64
-    variant=debug,release
+    variant=release
     link=shared
     runtime-link=shared
     threading=multi
