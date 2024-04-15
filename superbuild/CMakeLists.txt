@@ -83,6 +83,11 @@ if (UNIX)
   set(OPENVKL_PATCH_COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_SOURCE_DIR}/openvkl.patch)
 endif ()
 
+set(OPENVKL_PATCH_COMMAND "")
+if (UNIX)
+  set(OPENVKL_PATCH_COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_SOURCE_DIR}/openvkl.patch)
+endif ()
+
 ExternalProject_Add(openvkl
   GIT_REPOSITORY https://github.com/openvkl/openvkl.git
   GIT_TAG v${OPENVKL_VERSION}
