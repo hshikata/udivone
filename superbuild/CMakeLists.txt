@@ -78,21 +78,10 @@ ExternalProject_Add(rkcommon
 ########################################################################
 set(OPENVKL_VERSION 2.0.1)
 
-set(OPENVKL_PATCH_COMMAND "")
-if (UNIX)
-  set(OPENVKL_PATCH_COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_SOURCE_DIR}/openvkl.patch)
-endif ()
-
-set(OPENVKL_PATCH_COMMAND "")
-if (UNIX)
-  set(OPENVKL_PATCH_COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_SOURCE_DIR}/openvkl.patch)
-endif ()
-
 ExternalProject_Add(openvkl
   GIT_REPOSITORY https://github.com/openvkl/openvkl.git
   GIT_TAG v${OPENVKL_VERSION}
   UPDATE_COMMAND ""
-  PATCH_COMMAND ${OPENVKL_PATCH_COMMAND}
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
