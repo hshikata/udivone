@@ -3,6 +3,7 @@ project(udivone-superbuild)
 cmake_minimum_required(VERSION 3.19)
 
 cmake_policy(SET CMP0097 NEW)
+cmake_policy(SET CMP0177 NEW)
 
 include(ExternalProject)
 
@@ -16,7 +17,7 @@ endif ()
 ########################################################################
 ExternalProject_Add(onetbb
   GIT_REPOSITORY https://github.com/oneapi-src/oneTBB.git
-  GIT_TAG v2021.11.0
+  GIT_TAG v2022.1.0
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -29,7 +30,7 @@ ExternalProject_Add(onetbb
 ########################################################################
 ExternalProject_Add(levelzero
   GIT_REPOSITORY https://github.com/oneapi-src/level-zero.git
-  GIT_TAG v1.16.14
+  GIT_TAG v1.22.4
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -38,7 +39,7 @@ ExternalProject_Add(levelzero
 ########################################################################
 # Intel Embree
 ########################################################################
-set(EMBREE_VERSION 4.3.1)
+set(EMBREE_VERSION 4.4.0)
 
 ExternalProject_Add(embree
   GIT_REPOSITORY https://github.com/embree/embree.git
@@ -57,7 +58,7 @@ ExternalProject_Add(embree
 ########################################################################
 # Intel rkcommon
 ########################################################################
-set(RKCOMMON_VERSION 1.13.0)
+set(RKCOMMON_VERSION 1.14.0)
 
 ExternalProject_Add(rkcommon
   GIT_REPOSITORY https://github.com/ospray/rkcommon.git
@@ -91,13 +92,14 @@ ExternalProject_Add(openvkl
     -DTBB_DIR=${CMAKE_INSTALL_PREFIX}/lib/cmake/TBB
     -Drkcommon_DIR=${CMAKE_INSTALL_PREFIX}/lib/cmake/rkcommon-${RKCOMMON_VERSION}
     -Dembree_DIR=${CMAKE_INSTALL_PREFIX}/lib/cmake/embree-${EMBREE_VERSION}
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   DEPENDS onetbb rkcommon embree
 )
 
 ########################################################################
 # Intel OpenImageDenoise
 ########################################################################
-set(OIDN_VERSION 2.2.2)
+set(OIDN_VERSION 2.3.3)
 
 ExternalProject_Add(oidn
   GIT_REPOSITORY https://github.com/OpenImageDenoise/oidn.git
@@ -115,7 +117,7 @@ ExternalProject_Add(oidn
 ########################################################################
 ExternalProject_Add(ospray
   GIT_REPOSITORY https://github.com/ospray/ospray.git
-  GIT_TAG v3.1.0
+  GIT_TAG v3.2.0
   GIT_SUBMODULES ""
   UPDATE_COMMAND ""
   CMAKE_ARGS
@@ -151,7 +153,7 @@ ExternalProject_Add(zlib
 ########################################################################
 ExternalProject_Add(libpng
   GIT_REPOSITORY https://github.com/glennrp/libpng.git
-  GIT_TAG v1.6.43
+  GIT_TAG v1.6.48
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DZLIB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
@@ -163,7 +165,7 @@ ExternalProject_Add(libpng
 ########################################################################
 ExternalProject_Add(openjpeg
   GIT_REPOSITORY https://github.com/uclouvain/openjpeg.git
-  GIT_TAG v2.5.2
+  GIT_TAG v2.5.3
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
@@ -185,7 +187,7 @@ elseif (UNIX)
   set(BOOST_BUILD_CMD ${CMAKE_CURRENT_BINARY_DIR}/boost-prefix/src/boost/b2)
 endif ()
 
-set(BOOST_VERSION 1.84.0)
+set(BOOST_VERSION 1.88.0)
 
 ExternalProject_Add(boost
   GIT_REPOSITORY https://github.com/boostorg/boost.git
@@ -211,7 +213,7 @@ ExternalProject_Add(boost
 ########################################################################
 ExternalProject_Add(blosc
   GIT_REPOSITORY https://github.com/Blosc/c-blosc.git
-  GIT_TAG v1.21.5
+  GIT_TAG v1.21.6
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -223,6 +225,7 @@ ExternalProject_Add(blosc
     -DBUILD_TESTS:BOOL=OFF
     -DPREFER_EXTERNAL_ZLIB:BOOL=ON
     -DZLIB_ROOT:PATH=${CMAKE_INSTALL_PREFIX}
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   DEPENDS zlib
 )
 
@@ -231,7 +234,7 @@ ExternalProject_Add(blosc
 ########################################################################
 ExternalProject_Add(openvdb
   GIT_REPOSITORY https://github.com/AcademySoftwareFoundation/openvdb.git
-  GIT_TAG v11.0.0
+  GIT_TAG v12.0.1
   UPDATE_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -254,7 +257,7 @@ set(DCMTK_PATCH_COMMAND "")
 
 ExternalProject_Add(dcmtk
   GIT_REPOSITORY https://github.com/DCMTK/dcmtk.git
-  GIT_TAG DCMTK-3.6.8
+  GIT_TAG DCMTK-3.6.9
   PATCH_COMMAND ${DCMTK_PATCH_COMMAND}
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
@@ -275,8 +278,8 @@ ExternalProject_Add(dcmtk
 # VTK
 ########################################################################
 set(VTK_MAJOR_VERSION 9)
-set(VTK_MINOR_VERSION 3)
-set(VTK_PATCH_LEVEL 0)
+set(VTK_MINOR_VERSION 4)
+set(VTK_PATCH_LEVEL 2)
 
 ExternalProject_Add(vtk
   GIT_REPOSITORY https://gitlab.kitware.com/vtk/vtk.git
@@ -299,7 +302,7 @@ ExternalProject_Add(vtk
 ########################################################################
 ExternalProject_Add(itk
   GIT_REPOSITORY https://github.com/InsightSoftwareConsortium/ITK.git
-  GIT_TAG v5.3.0
+  GIT_TAG v5.4.3
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
@@ -324,7 +327,7 @@ ExternalProject_Add(itk
 ########################################################################
 ExternalProject_Add(gtest
   GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG v1.14.0
+  GIT_TAG v1.17.0
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_DEBUG_POSTFIX:STRING=${LIB_DEBUG_SUFFIX}
