@@ -99,7 +99,7 @@ ExternalProject_Add(openvkl
 ########################################################################
 # Intel OpenImageDenoise
 ########################################################################
-set(OIDN_VERSION 2.3.3)
+set(OIDN_VERSION 2.3.0)
 
 ExternalProject_Add(oidn
   GIT_REPOSITORY https://github.com/OpenImageDenoise/oidn.git
@@ -198,6 +198,7 @@ ExternalProject_Add(boost
     --prefix=${CMAKE_INSTALL_PREFIX}
     -sZLIB_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
     --without-python
+    --without-mpi
     address-model=64
     variant=release
     link=shared
